@@ -1,20 +1,20 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace Astrogoat\Discounts;
 
 use Helix\Lego\Apps\App;
 use Helix\Lego\LegoManager;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Settings\SkeletonSettings;
+use Astrogoat\Discounts\Settings\DiscountsSettings;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class DiscountsServiceProvider extends PackageServiceProvider
 {
     public function registerApp(App $app)
     {
         return $app
-            ->name('skeleton')
-            ->settings(SkeletonSettings::class)
+            ->name('discounts')
+            ->settings(DiscountsSettings::class)
             ->migrations([
                 __DIR__ . '/../database/migrations',
                 __DIR__ . '/../database/migrations/settings',
@@ -32,6 +32,6 @@ class SkeletonServiceProvider extends PackageServiceProvider
 
     public function configurePackage(Package $package): void
     {
-        $package->name('skeleton')->hasViews();
+        $package->name('discounts')->hasViews();
     }
 }
