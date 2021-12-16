@@ -2,8 +2,8 @@
 
 namespace Astrogoat\Discounts\Settings;
 
-use Helix\Lego\Settings\AppSettings;
 use Astrogoat\Discounts\Actions\DiscountsAction;
+use Helix\Lego\Settings\AppSettings;
 
 class DiscountsSettings extends AppSettings
 {
