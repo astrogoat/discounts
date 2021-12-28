@@ -19,19 +19,19 @@ class TieredFixedAmountType extends DiscountType
         return 'tiered_fixed_amount';
     }
 
-    public function calculateDiscountAmount(Money $money) : Money
+    public function calculateDiscountAmount(Money $money): Money
     {
         $amount = $this->findMatchingTier($money)['value'];
 
         return new Money($amount, $money->getCurrency());
     }
 
-    public function getValue(Money $money) : int
+    public function getValue(Money $money): int
     {
         return $this->findMatchingTier($money)['value'];
     }
 
-    public function getDisplayValue(Money $money) : mixed
+    public function getDisplayValue(Money $money): mixed
     {
         return $this->calculateDiscountAmount($money);
     }

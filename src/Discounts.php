@@ -46,21 +46,21 @@ class Discounts
         return settings(DiscountsSettings::class, 'payload');
     }
 
-    public function calculateDiscountAmount(Money $money) : Money
+    public function calculateDiscountAmount(Money $money): Money
     {
         $type = $this->getCurrentType();
 
-        return (new $type)->calculateDiscountAmount($money);
+        return (new $type())->calculateDiscountAmount($money);
     }
 
-    public function getDisplayValue(Money $money) : mixed
+    public function getDisplayValue(Money $money): mixed
     {
         $type = $this->getCurrentType();
 
-        return (new $type)->getDisplayValue($money);
+        return (new $type())->getDisplayValue($money);
     }
 
-    public function getDiscountedAmount(Money $money) : Money
+    public function getDiscountedAmount(Money $money): Money
     {
         return $money->subtract($this->calculateDiscountAmount($money));
     }

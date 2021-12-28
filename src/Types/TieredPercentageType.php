@@ -19,7 +19,7 @@ class TieredPercentageType extends DiscountType
         return 'tiered_percentage';
     }
 
-    public function calculateDiscountAmount(Money $money) : Money
+    public function calculateDiscountAmount(Money $money): Money
     {
         $percentage = $this->findMatchingTier($money)['value'];
 
@@ -28,12 +28,12 @@ class TieredPercentageType extends DiscountType
         return new Money($amount, $money->getCurrency());
     }
 
-    public function getValue(Money $money) : int
+    public function getValue(Money $money): int
     {
         return $this->findMatchingTier($money)['value'];
     }
 
-    public function getDisplayValue(Money $money) : mixed
+    public function getDisplayValue(Money $money): mixed
     {
         return $this->getValue($money) . '%';
     }
