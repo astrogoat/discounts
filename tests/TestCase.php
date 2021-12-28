@@ -2,9 +2,9 @@
 
 namespace Astrogoat\Discounts\Tests;
 
+use Astrogoat\Discounts\DiscountsServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Astrogoat\Discounts\DiscountsServiceProvider;
 
 class TestCase extends Orchestra
 {
