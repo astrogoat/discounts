@@ -4,13 +4,11 @@ namespace Astrogoat\Discounts\Settings;
 
 use Astrogoat\Discounts\Casts\DiscountTiersCast;
 use Astrogoat\Discounts\Casts\PayloadCast;
-use Helix\Lego\Apps\Discounts\CalculateDiscount;
 use Helix\Lego\Settings\AppSettings;
 
 class DiscountsSettings extends AppSettings
 {
     public $payload;
-    public string $apiKey;
 
     protected array $rules = [
         'payload' => ['required'],

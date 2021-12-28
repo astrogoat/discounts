@@ -5,6 +5,7 @@ namespace Astrogoat\Discounts;
 use Astrogoat\Discounts\Settings\DiscountsSettings;
 use Astrogoat\Discounts\Types\TieredFixedAmountType;
 use Astrogoat\Discounts\Types\TieredPercentageType;
+use Money\Money;
 
 class Discounts
 {
@@ -18,12 +19,12 @@ class Discounts
         return 'tiered_fixed_amount';
     }
 
-    protected function getTypes(): array
+    public function getTypes(): array
     {
         return $this->types;
     }
 
-    protected function getType(string $type)
+    public function getType(string $type)
     {
         return new ($this->types[$type]);
     }
@@ -43,5 +44,24 @@ class Discounts
     public function getPayload()
     {
         return settings(DiscountsSettings::class, 'payload');
+    }
+
+    public function calculateDiscountAmount(Money $money) : Money
+    {
+        $type = $this->getCurrentType();
+
+        return (new $type)->calculateDiscountAmount($money);
+    }
+
+    public function getDisplayValue(Money $money) : mixed
+    {
+        $type = $this->getCurrentType();
+
+        return (new $type)->getDisplayValue($money);
+    }
+
+    public function getDiscountedAmount(Money $money) : Money
+    {
+        return $money->subtract($this->calculateDiscountAmount($money));
     }
 }
