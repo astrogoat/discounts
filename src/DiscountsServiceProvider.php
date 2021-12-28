@@ -5,12 +5,12 @@ namespace Astrogoat\Discounts;
 use Astrogoat\Discounts\Http\Livewire\Payload;
 use Astrogoat\Discounts\Http\Livewire\Types\TieredFixedAmount;
 use Astrogoat\Discounts\Http\Livewire\Types\TieredPercentage;
+use Astrogoat\Discounts\Settings\DiscountsSettings;
 use Helix\Lego\Apps\App;
 use Helix\Lego\LegoManager;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Astrogoat\Discounts\Settings\DiscountsSettings;
 
 class DiscountsServiceProvider extends PackageServiceProvider
 {

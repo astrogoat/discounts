@@ -14,7 +14,7 @@ class Discounts
         'tiered_percentage' => TieredPercentageType::class,
     ];
 
-    public function getDefaultType() : string
+    public function getDefaultType(): string
     {
         return 'tiered_fixed_amount';
     }

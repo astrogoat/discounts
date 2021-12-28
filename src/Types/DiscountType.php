@@ -9,7 +9,7 @@ abstract class DiscountType
 {
     abstract public function view(): string;
 
-    abstract public static function getId() : string;
+    abstract public static function getId(): string;
 
     abstract public function calculateDiscountAmount(Money $money) : Money;
 
