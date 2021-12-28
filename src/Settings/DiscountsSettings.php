@@ -2,30 +2,29 @@
 
 namespace Astrogoat\Discounts\Settings;
 
+use Astrogoat\Discounts\Casts\DiscountTiersCast;
+use Astrogoat\Discounts\Casts\PayloadCast;
+use Helix\Lego\Apps\Discounts\CalculateDiscount;
 use Helix\Lego\Settings\AppSettings;
-use Astrogoat\Discounts\Actions\DiscountsAction;
 
 class DiscountsSettings extends AppSettings
 {
-    // public string $url;
-    // public string $access_token;
+    public $payload;
+    public string $apiKey;
 
     protected array $rules = [
-        // 'url' => ['required', 'url'],
-        // 'access_token' => ['required'],
+        'payload' => ['required'],
     ];
 
-    protected static array $actions = [
-        // DiscountsAction::class,
-    ];
-
-    // public static function encrypted(): array
-    // {
-    //     return ['access_token'];
-    // }
+    public static function casts() : array
+    {
+        return [
+            'payload' => PayloadCast::class,
+        ];
+    }
 
     public function description(): string
     {
-        return 'Interact with Discounts.';
+        return 'Allows you to set discounts and discount tiers.';
     }
 }

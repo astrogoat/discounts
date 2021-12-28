@@ -15,9 +15,15 @@
             "role": "Developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.hlx.dev"
+        }
+    ],
     "require": {
         "php": "^8.0",
-        "astrogoat/stratum": "dev-develop",
+        "astrogoat/strata": "dev-develop",
         "spatie/laravel-package-tools": "^1.4.3",
         "illuminate/contracts": "^8.37"
     },
