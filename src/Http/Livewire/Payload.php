@@ -3,7 +3,6 @@
 namespace Astrogoat\Discounts\Http\Livewire;
 
 use Astrogoat\Discounts\Discounts;
-use Astrogoat\Promobar\Promobar;
 use Helix\Lego\Settings\AppSettings;
 use Livewire\Component;
 

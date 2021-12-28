@@ -9,7 +9,7 @@ class TieredPercentageType extends DiscountType
         return 'discounts::settings.types.tiered-percentage';
     }
 
-    public static function getId() : string
+    public static function getId(): string
     {
         return 'tiered_percentage';
     }

@@ -35,7 +35,7 @@ class TieredFixedAmount extends Type
             'value' => 0,
         ];
 
-        $this->payload['value'][]  = [
+        $this->payload['value'][] = [
             'threshold' => 0,
             'value' => 0,
         ];

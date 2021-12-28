@@ -9,7 +9,7 @@ class TieredFixedAmountType extends DiscountType
         return 'discounts::settings.types.tiered-fixed-amount';
     }
 
-    public static function getId() : string
+    public static function getId(): string
     {
         return 'tiered_fixed_amount';
     }

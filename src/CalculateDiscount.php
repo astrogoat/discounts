@@ -2,8 +2,8 @@
 
 namespace Astrogoat\Discounts;
 
-use Money\Money;
 use Illuminate\Support\Collection;
+use Money\Money;
 
 class CalculateDiscount
 {
@@ -14,27 +14,27 @@ class CalculateDiscount
         $this->tiers = collect($tiers);
     }
 
-    public function getType() : string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function getTiers() : Collection
+    public function getTiers(): Collection
     {
         return $this->tiers;
     }
 
-    public function getValue(Money $money) : int
+    public function getValue(Money $money): int
     {
         return $this->findTier($money)['value'];
     }
 
-    public function getDiscountedAmount(Money $money) : Money
+    public function getDiscountedAmount(Money $money): Money
     {
         return $money->subtract($this->getDiscountAmount($money));
     }
 
-    public function getDiscountAmount(Money $money) : Money
+    public function getDiscountAmount(Money $money): Money
     {
         $tier = $this->findTier($money);
 
