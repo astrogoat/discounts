@@ -37,7 +37,7 @@ class Payload extends SettingsCast
     public function payloadHasBeenUpdated($payload)
     {
         $this->payload = $payload;
-        $this->emitTo('helix.lego.apps.livewire.app-edit', 'settingKeyUpdated', ['key' => 'payload', 'value' => $this->payload]);
+        $this->updated('payload', $payload);
     }
 
     public function updatingPayloadType($value)
