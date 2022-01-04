@@ -13,7 +13,7 @@ class Payload extends SettingsCast
     public array $payloadCaches = [];
 
     protected $listeners = [
-        'updatedPayload',
+        'payloadHasBeenUpdated',
     ];
 
     public function get($payload)
@@ -34,7 +34,7 @@ class Payload extends SettingsCast
             : $settings->payload;
     }
 
-    public function updatedPayload($payload)
+    public function payloadHasBeenUpdated($payload)
     {
         $this->payload = $payload;
         $this->emitTo('helix.lego.apps.livewire.app-edit', 'settingKeyUpdated', ['key' => 'payload', 'value' => $this->payload]);
@@ -68,7 +68,9 @@ class Payload extends SettingsCast
 
     public function getSelectedTypeInclude(): string
     {
-        return (new (app(Discounts::class)->getCurrentType()))->view();
+        $type = new (app(Discounts::class)->getTypes()[$this->payload['type']]);
+
+        return $type->view();
     }
 
     public function render()

@@ -8,6 +8,6 @@ abstract class Type extends Component
 {
     public function updatedPayload()
     {
-        $this->emitTo('astrogoat.discounts.casts.payload', 'updatedPayload', $this->payload);
+        $this->emitTo('astrogoat.discounts.casts.payload', 'payloadHasBeenUpdated', $this->payload);
     }
 }
