@@ -47,6 +47,8 @@ class TieredFixedAmount extends Type
     {
         array_splice($this->displayTiers, $index, 1);
         array_splice($this->payload['value'], $index, 1);
+
+        $this->updatedPayload();
     }
 
     public function render()

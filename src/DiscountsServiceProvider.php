@@ -2,7 +2,7 @@
 
 namespace Astrogoat\Discounts;
 
-use Astrogoat\Discounts\Http\Livewire\Payload;
+use Astrogoat\Discounts\Casts\Payload;
 use Astrogoat\Discounts\Http\Livewire\Types\TieredFixedAmount;
 use Astrogoat\Discounts\Http\Livewire\Types\TieredPercentage;
 use Astrogoat\Discounts\Settings\DiscountsSettings;
@@ -38,7 +38,7 @@ class DiscountsServiceProvider extends PackageServiceProvider
 
     public function bootingPackage()
     {
-        Livewire::component('astrogoat.discounts.payload', Payload::class);
+        Livewire::component('astrogoat.discounts.casts.payload', Payload::class);
         Livewire::component('astrogoat.discounts.types.tiered-fixed-amount', TieredFixedAmount::class);
         Livewire::component('astrogoat.discounts.types.tiered-percentage', TieredPercentage::class);
     }

@@ -2,7 +2,7 @@
 
 namespace Astrogoat\Discounts\Settings;
 
-use Astrogoat\Discounts\Casts\PayloadCast;
+use Astrogoat\Discounts\Casts\Payload;
 use Helix\Lego\Settings\AppSettings;
 
 class DiscountsSettings extends AppSettings
@@ -16,7 +16,7 @@ class DiscountsSettings extends AppSettings
     public static function casts(): array
     {
         return [
-            'payload' => PayloadCast::class,
+            'payload' => Payload::class,
         ];
     }
 

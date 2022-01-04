@@ -1,20 +1,30 @@
 <?php
 
-namespace Astrogoat\Discounts\Http\Livewire;
+namespace Astrogoat\Discounts\Casts;
 
 use Astrogoat\Discounts\Discounts;
+use Helix\Lego\Apps\Contracts\SettingsCast;
 use Helix\Lego\Settings\AppSettings;
-use Livewire\Component;
 
-class Payload extends Component
+class Payload extends SettingsCast
 {
     public array $payload;
     protected AppSettings $settings;
     public array $payloadCaches = [];
 
     protected $listeners = [
-        'newPayload',
+        'updatedPayload',
     ];
+
+    public function get($payload)
+    {
+        return $payload;
+    }
+
+    public function set($payload)
+    {
+        return $payload;
+    }
 
     public function mount(AppSettings $settings)
     {
@@ -24,9 +34,10 @@ class Payload extends Component
             : $settings->payload;
     }
 
-    public function newPayload($payload)
+    public function updatedPayload($payload)
     {
         $this->payload = $payload;
+        $this->emitTo('helix.lego.apps.livewire.app-edit', 'settingKeyUpdated', ['key' => 'payload', 'value' => $this->payload]);
     }
 
     public function updatingPayloadType($value)
@@ -57,9 +68,7 @@ class Payload extends Component
 
     public function getSelectedTypeInclude(): string
     {
-        $type = new (app(Discounts::class)->getTypes()[$this->payload['type']]);
-
-        return $type->view();
+        return (new (app(Discounts::class)->getCurrentType()))->view();
     }
 
     public function render()
