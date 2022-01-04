@@ -9,13 +9,13 @@
                 <x-fab::lists.table.column>
                     <x-fab::forms.input
                         leading="$"
-                        wire:model="displayTiers.{{ $index }}.threshold"
+                        wire:model.debounce.1s="displayTiers.{{ $index }}.threshold"
                     />
                 </x-fab::lists.table.column>
                 <x-fab::lists.table.column>
                     <x-fab::forms.input
                         trailing="%"
-                        wire:model="displayTiers.{{ $index }}.value"
+                        wire:model.debounce.1s="displayTiers.{{ $index }}.value"
                     />
                 </x-fab::lists.table.column>
                 <x-fab::lists.table.column align="right">
