@@ -9,7 +9,6 @@ use Helix\Lego\Settings\AppSettings;
 class Payload extends SettingsCast
 {
     public array $payload;
-    protected AppSettings $settings;
     public array $payloadCaches = [];
 
     protected $listeners = [
@@ -28,7 +27,8 @@ class Payload extends SettingsCast
 
     public function mount(AppSettings $settings)
     {
-        $this->settings = $settings;
+        parent::mount($settings);
+
         $this->payload = blank($settings->payload)
             ? ['type' => app(Discounts::class)->getDefaultType()]
             : $settings->payload;
