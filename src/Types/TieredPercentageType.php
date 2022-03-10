@@ -2,6 +2,7 @@
 
 namespace Astrogoat\Discounts\Types;
 
+use Astrogoat\Cart\Discount;
 use Astrogoat\Discounts\Traits\HasTiers;
 use Money\Money;
 
@@ -36,5 +37,10 @@ class TieredPercentageType extends DiscountType
     public function getDisplayValue(Money $money): mixed
     {
         return $this->getValue($money) . '%';
+    }
+
+    public function createCartDiscount(): Discount
+    {
+        return Discount::percentage($this->getValue(cart()->getSubtotal()));
     }
 }

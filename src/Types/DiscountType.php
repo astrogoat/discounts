@@ -2,6 +2,7 @@
 
 namespace Astrogoat\Discounts\Types;
 
+use Astrogoat\Cart\Discount;
 use Illuminate\Support\Str;
 use Money\Money;
 
@@ -16,6 +17,8 @@ abstract class DiscountType
     abstract public function getValue(Money $money): int;
 
     abstract public function getDisplayValue(Money $money): mixed;
+
+    abstract public function createCartDiscount(): Discount;
 
     public function getName(): string
     {
