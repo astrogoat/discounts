@@ -25,7 +25,7 @@ class DiscountsSettings extends AppSettings
     public function help()
     {
         return [
-            'auto_apply_discount' => 'When this is checked the discount will automatically be added when an item is added to the cart.'
+            'auto_apply_discount' => 'When this is checked the discount will automatically be added when an item is added to the cart.',
         ];
     }
 
