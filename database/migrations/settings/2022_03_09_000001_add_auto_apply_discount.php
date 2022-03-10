@@ -6,7 +6,7 @@ class AddAutoApplyDiscount extends SettingsMigration
 {
     public function up(): void
     {
-        $this->migrator->add('discounts.auto_apply_discount', false);
+        $this->migrator->add('discounts.auto_apply_discount', true);
     }
 
     public function down()
