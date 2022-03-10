@@ -3,6 +3,7 @@
 namespace Astrogoat\Discounts;
 
 use Astrogoat\Cart\Events\ItemAddedToCart;
+use Astrogoat\Cart\Events\ItemRemovedFromCart;
 use Astrogoat\Discounts\Casts\Payload;
 use Astrogoat\Discounts\Http\Livewire\Types\TieredFixedAmount;
 use Astrogoat\Discounts\Http\Livewire\Types\TieredPercentage;
@@ -42,6 +43,7 @@ class DiscountsServiceProvider extends PackageServiceProvider
     public function bootingPackage()
     {
         Event::listen(ItemAddedToCart::class, AutoApplyDiscount::class);
+        Event::listen(ItemRemovedFromCart::class, AutoApplyDiscount::class);
 
         Livewire::component('astrogoat.discounts.casts.payload', Payload::class);
         Livewire::component('astrogoat.discounts.types.tiered-fixed-amount', TieredFixedAmount::class);

@@ -3,6 +3,7 @@
 namespace Astrogoat\Discounts\Listeners;
 
 use Astrogoat\Cart\Events\ItemAddedToCart;
+use Astrogoat\Cart\Events\ItemRemovedFromCart;
 use Astrogoat\Discounts\Discounts;
 use Astrogoat\Discounts\Settings\DiscountsSettings;
 use Astrogoat\Shopify\Apps\Discounts\Types\ShopifyTieredDiscountCodeType;
@@ -17,7 +18,7 @@ class AutoApplyDiscount
      *
      * @return void
      */
-    public function handle(ItemAddedToCart $event) : void
+    public function handle(ItemAddedToCart|ItemRemovedFromCart $event) : void
     {
         if (app(DiscountsSettings::class)->auto_apply_discount !== true) {
             return;
