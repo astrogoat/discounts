@@ -2,6 +2,7 @@
 
 namespace Astrogoat\Discounts\Types;
 
+use Astrogoat\Cart\Discount;
 use Astrogoat\Discounts\Traits\HasTiers;
 use Money\Money;
 
@@ -34,5 +35,10 @@ class TieredFixedAmountType extends DiscountType
     public function getDisplayValue(Money $money): mixed
     {
         return $this->calculateDiscountAmount($money);
+    }
+
+    public function createCartDiscount(): Discount
+    {
+        return Discount::fixed($this->calculateDiscountAmount(cart()->getSubtotal()));
     }
 }
