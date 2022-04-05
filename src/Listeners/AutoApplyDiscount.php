@@ -2,6 +2,7 @@
 
 namespace Astrogoat\Discounts\Listeners;
 
+use Astrogoat\Cart\CartItem;
 use Astrogoat\Cart\Events\ItemAddedToCart;
 use Astrogoat\Cart\Events\ItemRemovedFromCart;
 use Astrogoat\Discounts\Discounts;
@@ -22,6 +23,11 @@ class AutoApplyDiscount
             return;
         }
 
-        cart()->addDiscount(app(Discounts::class)->getCurrentType()->createCartDiscount());
+        if($event::class === 'Astrogoat\Cart\Events\ItemAddedToCart') {
+            if (!is_null(app(Discounts::class)->getCurrentType()->createCartDiscount($event->cartItem))) {
+                cart()->getCartItem($event->cartItem->getHash())->addDiscount(app(Discounts::class)->getCurrentType()->createCartDiscount($event->cartItem));
+            }
+        }
+//        cart()->addDiscount(app(Discounts::class)->getCurrentType()->createCartDiscount($event->cartItem));
     }
 }
