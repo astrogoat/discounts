@@ -2,8 +2,8 @@
 
 namespace Astrogoat\Discounts\Types;
 
-use Astrogoat\Cart\Discount;
 use Astrogoat\Cart\CartItem;
+use Astrogoat\Cart\Discount;
 use Illuminate\Support\Str;
 use Money\Money;
 

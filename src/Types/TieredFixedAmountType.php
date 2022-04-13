@@ -2,10 +2,10 @@
 
 namespace Astrogoat\Discounts\Types;
 
+use Astrogoat\Cart\CartItem;
 use Astrogoat\Cart\Discount;
 use Astrogoat\Discounts\Traits\HasTiers;
 use Money\Money;
-use Astrogoat\Cart\CartItem;
 
 class TieredFixedAmountType extends DiscountType
 {
