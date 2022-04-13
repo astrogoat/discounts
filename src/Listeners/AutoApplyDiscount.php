@@ -25,9 +25,12 @@ class AutoApplyDiscount
 
         if($event::class === 'Astrogoat\Cart\Events\ItemAddedToCart') {
             if (!is_null(app(Discounts::class)->getCurrentType()->createCartDiscount($event->cartItem))) {
-                cart()->getCartItem($event->cartItem->getHash())->addDiscount(app(Discounts::class)->getCurrentType()->createCartDiscount($event->cartItem));
+                $discount = app(Discounts::class)->getCurrentType()->createCartDiscount($event->cartItem);
+
+                cart()->getCartItem($event->cartItem->getHash())->addDiscount($discount);
+                cart()->addDiscount($discount);
             }
         }
-//        cart()->addDiscount(app(Discounts::class)->getCurrentType()->createCartDiscount($event->cartItem));
+//        cart()->addDiscount(app(Discounts::class)->getCurrentType()->createCartDiscount());
     }
 }
