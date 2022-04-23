@@ -3,20 +3,20 @@
 namespace Astrogoat\Discounts;
 
 use Astrogoat\Discounts\Settings\DiscountsSettings;
+use Astrogoat\Discounts\Types\DiscountType;
 use Astrogoat\Discounts\Types\TieredFixedAmountType;
 use Astrogoat\Discounts\Types\TieredPercentageType;
-use Money\Money;
 
 class Discounts
 {
     protected array $types = [
-        'tiered_fixed_amount' => TieredFixedAmountType::class,
-        'tiered_percentage' => TieredPercentageType::class,
+        TieredFixedAmountType::class,
+        TieredPercentageType::class,
     ];
 
     public function getDefaultType(): string
     {
-        return 'tiered_fixed_amount';
+        return TieredFixedAmountType::class;
     }
 
     public function getTypes(): array
@@ -24,17 +24,17 @@ class Discounts
         return $this->types;
     }
 
-    public function getType(string $type)
+    public function getType(string $type) : DiscountType
     {
-        return new ($this->types[$type]);
+        return new $type;
     }
 
-    public function addType(string $key, string $type)
+    public function addType(string $type)
     {
-        $this->types[$key] = $type;
+        $this->types[] = $type;
     }
 
-    public function getCurrentType()
+    public function getCurrentType() : DiscountType
     {
         $type = settings(DiscountsSettings::class, 'payload')['type'] ?? $this->getDefaultType();
 
@@ -44,24 +44,5 @@ class Discounts
     public function getPayload()
     {
         return settings(DiscountsSettings::class, 'payload');
-    }
-
-    public function calculateDiscountAmount(Money $money): Money
-    {
-        $type = $this->getCurrentType();
-
-        return (new $type())->calculateDiscountAmount($money);
-    }
-
-    public function getDisplayValue(Money $money): mixed
-    {
-        $type = $this->getCurrentType();
-
-        return (new $type())->getDisplayValue($money);
-    }
-
-    public function getDiscountedAmount(Money $money): Money
-    {
-        return $money->subtract($this->calculateDiscountAmount($money));
     }
 }

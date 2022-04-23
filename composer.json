@@ -23,7 +23,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "astrogoat/cart": "^1.3",
+        "astrogoat/cart": "^2.0",
         "astrogoat/strata": "^0.1.0",
         "illuminate/contracts": "^8.37",
         "spatie/laravel-package-tools": "^1.4.3"

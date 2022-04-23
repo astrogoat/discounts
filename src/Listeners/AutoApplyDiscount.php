@@ -18,10 +18,30 @@ class AutoApplyDiscount
      */
     public function handle(ItemAddedToCart|ItemRemovedFromCart $event): void
     {
-        if (app(DiscountsSettings::class)->auto_apply_discount !== true) {
+        $settings = app(DiscountsSettings::class);
+
+        if (! $settings->isEnabled()) {
             return;
         }
 
-        cart()->addDiscount(app(Discounts::class)->getCurrentType()->createCartDiscount());
+        if ($event instanceof ItemAddedToCart) {
+            if (app(DiscountsSettings::class)->auto_apply_discount !== true) {
+                return;
+            }
+
+            if (cart()->getTotalDiscountAmountFor(app(Discounts::class)->getCurrentType())->isZero()) {
+                return;
+            }
+
+            cart()->addDiscount(app(Discounts::class)->getCurrentType());
+        }
+
+        if ($event instanceof ItemRemovedFromCart) {
+            $discount = app(Discounts::class)->getCurrentType();
+
+            if (cart()->getTotalDiscountAmountFor($discount)->isZero()) {
+                cart()->removeDiscount($discount->getId());
+            }
+        }
     }
 }

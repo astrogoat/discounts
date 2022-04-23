@@ -2,25 +2,20 @@
 
 namespace Astrogoat\Discounts\Types;
 
-use Astrogoat\Cart\Discount;
+use Astrogoat\Cart\Contracts\DiscountType as CartDiscountType;
 use Illuminate\Support\Str;
-use Money\Money;
+use Livewire\Component;
 
-abstract class DiscountType
+abstract class DiscountType extends Component implements CartDiscountType
 {
-    abstract public function view(): string;
+    public $payload;
 
-    abstract public static function getId(): string;
+    public function updatedPayload()
+    {
+        $this->emitTo('astrogoat.discounts.casts.payload', 'payloadHasBeenUpdated', $this->payload);
+    }
 
-    abstract public function calculateDiscountAmount(Money $money): Money;
-
-    abstract public function getValue(Money $money): int;
-
-    abstract public function getDisplayValue(Money $money): mixed;
-
-    abstract public function createCartDiscount(): Discount;
-
-    public function getName(): string
+    public function getTypeName(): string
     {
         return Str::of(class_basename($this))->beforeLast('Type')->headline();
     }

@@ -9,6 +9,8 @@ use Astrogoat\Discounts\Http\Livewire\Types\TieredFixedAmount;
 use Astrogoat\Discounts\Http\Livewire\Types\TieredPercentage;
 use Astrogoat\Discounts\Listeners\AutoApplyDiscount;
 use Astrogoat\Discounts\Settings\DiscountsSettings;
+use Astrogoat\Discounts\Types\TieredFixedAmountType;
+use Astrogoat\Discounts\Types\TieredPercentageType;
 use Helix\Lego\Apps\App;
 use Helix\Lego\LegoManager;
 use Illuminate\Support\Facades\Event;
@@ -46,8 +48,8 @@ class DiscountsServiceProvider extends PackageServiceProvider
         Event::listen(ItemRemovedFromCart::class, AutoApplyDiscount::class);
 
         Livewire::component('astrogoat.discounts.casts.payload', Payload::class);
-        Livewire::component('astrogoat.discounts.types.tiered-fixed-amount', TieredFixedAmount::class);
-        Livewire::component('astrogoat.discounts.types.tiered-percentage', TieredPercentage::class);
+        Livewire::component('astrogoat.discounts.types.tiered-fixed-amount-type', TieredFixedAmountType::class);
+        Livewire::component('astrogoat.discounts.types.tiered-percentage-type', TieredPercentageType::class);
     }
 
     public function configurePackage(Package $package): void

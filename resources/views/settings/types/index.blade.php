@@ -5,10 +5,10 @@
         label="Type"
         class="mb-4"
     >
-        @foreach($this->getTypes() as $key => $type)
-            <option value="{{ $key }}">{{ $type->getName() }}</option>
+        @foreach($this->getTypes() as $type)
+            <option value="{{ $type::class }}">{{ $type->getTypeName() }}</option>
         @endforeach
     </x-fab::forms.select>
 
-    @include($this->getSelectedTypeInclude())
+    @include($this->getSelectedTypeView(), ['component' => $this->getSelectedType()::getName()])
 </div>

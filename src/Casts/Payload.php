@@ -3,6 +3,7 @@
 namespace Astrogoat\Discounts\Casts;
 
 use Astrogoat\Discounts\Discounts;
+use Astrogoat\Discounts\Types\DiscountType;
 use Helix\Lego\Apps\Contracts\SettingsCast;
 use Helix\Lego\Settings\AppSettings;
 
@@ -10,6 +11,7 @@ class Payload extends SettingsCast
 {
     public array $payload;
     public array $payloadCaches = [];
+    public int $childViewNumber = 1;
 
     protected $listeners = [
         'payloadHasBeenUpdated',
@@ -63,14 +65,24 @@ class Payload extends SettingsCast
 
     public function getTypes(): array
     {
-        return collect(app(Discounts::class)->getTypes())->mapWithKeys(fn ($type, $key) => [$key => new $type()])->toArray();
+        return collect(app(Discounts::class)->getTypes())->map(fn ($type) => new $type())->toArray();
     }
 
-    public function getSelectedTypeInclude(): string
+    public function getSelectedType()
     {
-        $type = new (app(Discounts::class)->getTypes()[$this->payload['type']]);
+        return app(Discounts::class)->getType($this->payload['type']);
+    }
 
-        return $type->view();
+    /**
+     * A little hack to force re-rendering type views when changing the type.
+     *
+     * @return string
+     */
+    public function getSelectedTypeView(): string
+    {
+        $this->childViewNumber = ($this->childViewNumber === 1) ? 2 : 1;
+
+        return 'discounts::settings.types.child-' . $this->childViewNumber;
     }
 
     public function render()

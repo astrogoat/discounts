@@ -2,45 +2,88 @@
 
 namespace Astrogoat\Discounts\Types;
 
-use Astrogoat\Cart\Discount;
+use Astrogoat\Cart\CartItem;
 use Astrogoat\Discounts\Traits\HasTiers;
+use Illuminate\Support\Str;
 use Money\Money;
 
 class TieredPercentageType extends DiscountType
 {
     use HasTiers;
 
-    public function view(): string
+    public $displayTiers;
+
+    public function mount()
     {
-        return 'discounts::settings.types.tiered-percentage';
+        if (! isset($this->payload['value'])) {
+            $this->payload['value'] = [];
+        }
+
+        $this->displayTiers = array_map(function ($tier) {
+            $tier['threshold'] = $tier['threshold'] / 100;
+
+            return $tier;
+        }, $this->payload['value']);
     }
 
-    public static function getId(): string
+    public function getId(): string
     {
         return 'tiered_percentage';
     }
 
-    public function calculateDiscountAmount(Money $money): Money
+    public function getTitle() : string
     {
-        $percentage = $this->findMatchingTier($money)['value'];
+        $percentage = $this->findMatchingTier(cart()->getSubtotal())['value'];
 
-        $amount = $money->getAmount() * $percentage / 100;
-
-        return new Money($amount, $money->getCurrency());
+        return "{$percentage}% off";
     }
 
-    public function getValue(Money $money): int
+    public function calculateCartItemDiscountAmount(CartItem $cartItem) : Money
     {
-        return $this->findMatchingTier($money)['value'];
+        $percentage = $this->findMatchingTier(cart()->getSubtotal())['value'];
+
+        return $cartItem->getSubtotal()->divide(100)->multiply($percentage);
     }
 
-    public function getDisplayValue(Money $money): mixed
+    public function updatingDisplayTiers($value, $property)
     {
-        return $this->getValue($money) . '%';
+        $value = Str::contains($property, 'threshold') ? (int) $value * 100 : (int) $value;
+
+        data_set($this->payload['value'], $property, $value);
+
+        $this->updatedPayload();
     }
 
-    public function createCartDiscount(): Discount
+    public function addTier()
     {
-        return Discount::percentage($this->getValue(cart()->getSubtotal()));
+        $this->displayTiers[] = [
+            'threshold' => 0,
+            'value' => 0,
+        ];
+
+        $this->payload['value'][] = [
+            'threshold' => 0,
+            'value' => 0,
+        ];
+
+        $this->updatedPayload();
+    }
+
+    public function removeTier($index)
+    {
+        array_splice($this->displayTiers, $index, 1);
+        array_splice($this->payload['value'], $index, 1);
+
+        $this->updatedPayload();
+    }
+
+    public function canBeAppliedTo(CartItem $cartItem) : bool
+    {
+        return true;
+    }
+
+    public function render()
+    {
+        return view('discounts::settings.types.tiered-percentage');
     }
 }
