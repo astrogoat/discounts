@@ -24,9 +24,9 @@ class Discounts
         return $this->types;
     }
 
-    public function getType(string $type) : DiscountType
+    public function getType(string $type): DiscountType
     {
-        return new $type;
+        return new $type();
     }
 
     public function addType(string $type)
@@ -34,7 +34,7 @@ class Discounts
         $this->types[] = $type;
     }
 
-    public function getCurrentType() : DiscountType
+    public function getCurrentType(): DiscountType
     {
         $type = settings(DiscountsSettings::class, 'payload')['type'] ?? $this->getDefaultType();
 

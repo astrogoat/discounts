@@ -5,8 +5,6 @@ namespace Astrogoat\Discounts;
 use Astrogoat\Cart\Events\ItemAddedToCart;
 use Astrogoat\Cart\Events\ItemRemovedFromCart;
 use Astrogoat\Discounts\Casts\Payload;
-use Astrogoat\Discounts\Http\Livewire\Types\TieredFixedAmount;
-use Astrogoat\Discounts\Http\Livewire\Types\TieredPercentage;
 use Astrogoat\Discounts\Listeners\AutoApplyDiscount;
 use Astrogoat\Discounts\Settings\DiscountsSettings;
 use Astrogoat\Discounts\Types\TieredFixedAmountType;

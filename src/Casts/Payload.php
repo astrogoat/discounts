@@ -3,7 +3,6 @@
 namespace Astrogoat\Discounts\Casts;
 
 use Astrogoat\Discounts\Discounts;
-use Astrogoat\Discounts\Types\DiscountType;
 use Helix\Lego\Apps\Contracts\SettingsCast;
 use Helix\Lego\Settings\AppSettings;
 

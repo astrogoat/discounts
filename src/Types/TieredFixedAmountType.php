@@ -20,7 +20,7 @@ class TieredFixedAmountType extends DiscountType
         return 'tiered_fixed_amount';
     }
 
-    public function getTitle() : string
+    public function getTitle(): string
     {
         $numberFormatter = new NumberFormatter(app('lego')->getLocale(), NumberFormatter::CURRENCY);
         $moneyFormatter = new IntlMoneyFormatter($numberFormatter, new ISOCurrencies());
@@ -29,7 +29,7 @@ class TieredFixedAmountType extends DiscountType
         return $moneyFormatter->format($discountAmount) . ' off';
     }
 
-    public function calculateCartItemDiscountAmount(CartItem $cartItem) : Money
+    public function calculateCartItemDiscountAmount(CartItem $cartItem): Money
     {
         // ** EXAMPLE **
         // Item 1
@@ -99,7 +99,7 @@ class TieredFixedAmountType extends DiscountType
         $this->updatedPayload();
     }
 
-    public function canBeAppliedTo(CartItem $cartItem) : bool
+    public function canBeAppliedTo(CartItem $cartItem): bool
     {
         return true;
     }

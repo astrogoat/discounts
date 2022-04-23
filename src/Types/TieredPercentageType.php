@@ -31,14 +31,14 @@ class TieredPercentageType extends DiscountType
         return 'tiered_percentage';
     }
 
-    public function getTitle() : string
+    public function getTitle(): string
     {
         $percentage = $this->findMatchingTier(cart()->getSubtotal())['value'];
 
         return "{$percentage}% off";
     }
 
-    public function calculateCartItemDiscountAmount(CartItem $cartItem) : Money
+    public function calculateCartItemDiscountAmount(CartItem $cartItem): Money
     {
         $percentage = $this->findMatchingTier(cart()->getSubtotal())['value'];
 
@@ -77,7 +77,7 @@ class TieredPercentageType extends DiscountType
         $this->updatedPayload();
     }
 
-    public function canBeAppliedTo(CartItem $cartItem) : bool
+    public function canBeAppliedTo(CartItem $cartItem): bool
     {
         return true;
     }
