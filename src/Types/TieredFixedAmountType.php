@@ -4,6 +4,7 @@ namespace Astrogoat\Discounts\Types;
 
 use Astrogoat\Cart\CartItem;
 use Astrogoat\Cart\Contracts\Buyable;
+use Astrogoat\Discounts\Settings\DiscountsSettings;
 use Astrogoat\Discounts\Traits\HasTiers;
 use Money\Currencies\ISOCurrencies;
 use Money\Formatter\IntlMoneyFormatter;
@@ -14,7 +15,10 @@ class TieredFixedAmountType extends DiscountType
 {
     use HasTiers;
 
+    const DEFAULT_BUYABLE_DISCOUNT_CALCULATION_RULE = 'itemsInCart';
+
     public $displayTiers;
+    public $buyableDiscountCalculationRule;
 
     public function getId(): string
     {
@@ -23,16 +27,24 @@ class TieredFixedAmountType extends DiscountType
 
     public function getTitle(): string
     {
-        $amount = new Money($this->findMatchingTier(cart()->getTotalDiscountAmountFor($this))['value'], cart()->getCartCurrency());
-        ray($amount)->red();
+        $qualifyingItemsSubtotal = cart()->getQualifyingItemsForDiscount($this)->reduce(function (Money $carry, CartItem $cartItem) {
+            return $carry->add($cartItem->getSubtotal());
+        }, new Money(0, cart()->getCartCurrency()));
 
-        return $this->getTitleBasedOnAmount($amount);
+        $this->buyableDiscountCalculationRule = 'currentTier';
+
+        return $this->getTitleBasedOnAmount($qualifyingItemsSubtotal);
     }
 
     public function getTitleBasedOnAmount(Money $amount) : string
     {
-        $amount = new Money($this->findMatchingTier($amount)['value'], cart()->getCartCurrency());
-        ray($amount)->red();
+        $amount = match ($this->getBuyableDiscountCalculationRule()) {
+            'itemsInCart' => $this->calculateDiscountAmountBasedOnItemsInCart($amount),
+            'currentTier' => $this->calculateDiscountAmountBasedOnCurrentTier($amount),
+            'highestTier' => $this->calculateDiscountAmountBasedOnHighestTier($amount),
+            default => $this->calculateDiscountAmountBasedOnItemsInCart($amount),
+        };
+
         $amount = $amount->isZero() ? $amount : $amount->roundToUnit(1);
         $numberFormatter = new NumberFormatter(app('lego')->getLocale(), NumberFormatter::CURRENCY);
         $decimals = (substr($amount->getAmount(), -2) > 0) ? 2 : 0;
@@ -47,24 +59,7 @@ class TieredFixedAmountType extends DiscountType
         if (! $this->canBeAppliedTo($cartItem)) {
             return new Money(0, $cartItem->price->getCurrency());
         }
-        // ** EXAMPLE **
-        // Item 1
-        // - Quantity: 2
-        // - Unit price: $100
-        // - Subtotal: $200
-        // - Discount: (100 / 3) * 2 = 66.67
-        // - Total: 200 - 66.67 = 133.33
 
-        // Item 2
-        // - Quantity: 1
-        // - Unit price: $50
-        // - Subtotal: $50
-        // - Discount: (100 / 3) * 1 = 33.33
-        // - Total: 50 - 33.33 = 16.67
-
-        // SUBTOTAL: 250
-        // DISCOUNT: 100
-        // TOTAL: 150
         $qualifyingCartItems = $cartItem
             ->getCart()
             ->getQualifyingItemsForDiscount($this);
@@ -88,7 +83,91 @@ class TieredFixedAmountType extends DiscountType
             return new Money(0, cart()->getCartCurrency());
         }
 
-        $newTierDiscount = $this->findMatchingTier(cart()->getSubtotal()->add($buyable->getBuyablePrice()));
+        return match ($this->getBuyableDiscountCalculationRule()) {
+            'currentTier' => $this->calculateDiscountAmountBasedOnCurrentTier($buyable->getBuyablePrice(), $quantity),
+            'highestTier' => $this->calculateDiscountAmountBasedOnHighestTier($buyable->getBuyablePrice(), $quantity),
+            default => $this->calculateDiscountAmountBasedOnItemsInCart($buyable->getBuyablePrice()),
+        };
+    }
+
+    public function mount()
+    {
+        if (! isset($this->payload['value']['tiers'])) {
+            $this->payload['value']['tiers'] = [];
+        }
+
+        $this->displayTiers = array_map(function ($tier) {
+            $tier['threshold'] = $tier['threshold'] / 100;
+            $tier['value'] = $tier['value'] / 100;
+
+            return $tier;
+        }, $this->payload['value']['tiers']);
+
+        $this->buyableDiscountCalculationRule = $this->payload['value']['buyableDiscountCalculationRule'] ?? self::DEFAULT_BUYABLE_DISCOUNT_CALCULATION_RULE;
+    }
+
+    public function updatingDisplayTiers($value, $property)
+    {
+        data_set($this->payload['value']['tiers'], $property, (int) $value * 100);
+
+        $this->updatedPayload();
+    }
+
+    public function updatingbuyableDiscountCalculationRule($value)
+    {
+        data_set($this->payload['value'], 'buyableDiscountCalculationRule', $value);
+
+        $this->updatedPayload();
+    }
+
+    public function addTier()
+    {
+        $this->displayTiers[] = [
+            'threshold' => 0,
+            'value' => 0,
+        ];
+
+        $this->payload['value']['tiers'][] = [
+            'threshold' => 0,
+            'value' => 0,
+        ];
+
+        $this->updatedPayload();
+    }
+
+    public function removeTier($index)
+    {
+        array_splice($this->displayTiers, $index, 1);
+        array_splice($this->payload['value']['tiers'], $index, 1);
+
+        $this->updatedPayload();
+    }
+
+    public function canBeAppliedTo(CartItem|Buyable $item): bool
+    {
+        if (! is_null($customCanBeApplied = $this->canBeApplied($item))) {
+            return $customCanBeApplied;
+        }
+
+        if ($item instanceof CartItem) {
+            return ! $item->getSubtotal()->isZero();
+        }
+
+        if ($item->getBuyablePrice()->isZero()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function render()
+    {
+        return view('discounts::settings.types.tiered-fixed-amount');
+    }
+
+    private function calculateDiscountAmountBasedOnItemsInCart(Money $amount): Money
+    {
+        $newTierDiscount = $this->findMatchingTier(cart()->getSubtotal()->add($amount));
 
         // == Scenarios ==
         // 1. New total price does not qualilfy for discount = $0
@@ -106,8 +185,10 @@ class TieredFixedAmountType extends DiscountType
         $currentTierDiscount = $this->findMatchingTier(cart()->getSubtotal());
         $diffBetweenCurrentAndNewTier = new Money($newTierDiscount['value'] - $currentTierDiscount['value'], cart()->getCartCurrency());
 
+        ray($currentTierDiscount, $diffBetweenCurrentAndNewTier)->green();
+
         // 3. Discount is bigger than buyable price.
-        if ($buyable->getBuyablePrice()->lessThan($diffBetweenCurrentAndNewTier)) {
+        if ($amount->lessThan($diffBetweenCurrentAndNewTier)) {
             ray(3);
             $newTierThresholdAmount = new Money($newTierDiscount['threshold'], cart()->getCartCurrency());
 
@@ -120,76 +201,27 @@ class TieredFixedAmountType extends DiscountType
         return $diffBetweenCurrentAndNewTier;
     }
 
-    public function mount()
-    {
-        if (! isset($this->payload['value'])) {
-            $this->payload['value'] = [];
-        }
-
-        $this->displayTiers = array_map(function ($tier) {
-            $tier['threshold'] = $tier['threshold'] / 100;
-            $tier['value'] = $tier['value'] / 100;
-
-            return $tier;
-        }, $this->payload['value']);
+    private function calculateDiscountAmountBasedOnCurrentTier(Money $amount) {
+        return new Money($this->findMatchingTier($amount)['value'], $amount->getCurrency());
     }
 
-    public function updatingDisplayTiers($value, $property)
-    {
-        data_set($this->payload['value'], $property, (int) $value * 100);
-
-        $this->updatedPayload();
+    private function calculateDiscountAmountBasedOnHighestTier(Money $amount) {
+        return new Money($this->getHighestValueTier()['value'], $amount->getCurrency());
     }
 
-    public function addTier()
+    private function getBuyableDiscountCalculationRule() : string
     {
-        $this->displayTiers[] = [
-            'threshold' => 0,
-            'value' => 0,
-        ];
-
-        $this->payload['value'][] = [
-            'threshold' => 0,
-            'value' => 0,
-        ];
-
-        $this->updatedPayload();
+        return $this->buyableDiscountCalculationRule
+            ?: settings(DiscountsSettings::class, 'payload.value.buyableDiscountCalculationRule');
     }
 
-    public function removeTier($index)
+    public function buyableDiscountCalculationRuleHelp()
     {
-        array_splice($this->displayTiers, $index, 1);
-        array_splice($this->payload['value'], $index, 1);
-
-        $this->updatedPayload();
-    }
-
-    public function canBeAppliedTo(CartItem|Buyable $item): bool
-    {
-        $customCanBeApplied = $this->canBeApplied($item);
-        ray($item, $customCanBeApplied);
-        if (! is_null($customCanBeApplied)) {
-            ray(0);
-            return $customCanBeApplied;
-        }
-        ray(1, $item);
-        if ($item instanceof CartItem) {
-            return ! $item->getSubtotal()->isZero();
-        }
-
-        ray(2, $item);
-        if ($item->getBuyablePrice()->isZero()) {
-            return false;
-        }
-
-
-        ray(3, $item);
-
-        return true;
-    }
-
-    public function render()
-    {
-        return view('discounts::settings.types.tiered-fixed-amount');
+        return match ($this->buyableDiscountCalculationRule) {
+            'itemsInCart' => 'The discount is calculated based on the items already added to the cart and the item about to be added. If by adding the item to the cart, it will bring the discount into a new tier, the difference between the current tier and the next will be calculated. This will tell the customer exactly what the item will cost if added.',
+            'currentTier' => 'The discount is calculated soley on the price of the item about to be added and the tier that it falls under.',
+            'highestTier' => 'The discount is calculated soley on the price of the item about to be added and the highest tier available. This will always show the max discount possible, eventhough the cart subtotal might not be applicable for it. Use with care.',
+            default => '',
+        };
     }
 }

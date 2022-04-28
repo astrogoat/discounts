@@ -9,7 +9,7 @@ trait HasTiers
 {
     private function getHighestValueTier() : array
     {
-        $highestTier = collect(settings(DiscountsSettings::class, 'payload.value'))
+        $highestTier = collect(settings(DiscountsSettings::class, 'payload.value.tiers'))
             ->sortByDesc
             ->value
             ->values()
@@ -28,7 +28,7 @@ trait HasTiers
 
     private function findMatchingTier(Money $money) : array
     {
-        $tiers = collect(settings(DiscountsSettings::class, 'payload.value'))
+        $tiers = collect(settings(DiscountsSettings::class, 'payload.value.tiers'))
             ->sortByDesc
             ->threshold
             ->values();

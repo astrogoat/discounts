@@ -2,6 +2,7 @@
 
 namespace Astrogoat\Discounts;
 
+use Astrogoat\Cart\Contracts\Buyable;
 use Astrogoat\Discounts\Settings\DiscountsSettings;
 use Astrogoat\Discounts\Types\DiscountType;
 use Astrogoat\Discounts\Types\TieredFixedAmountType;
@@ -48,6 +49,11 @@ class Discounts
         $type = settings(DiscountsSettings::class, 'payload')['type'] ?? $this->getDefaultType();
 
         return $this->getType($type);
+    }
+
+    public function calculateBuyableDiscountAmount(Buyable $buyable, int $quantity = 1)
+    {
+        return $this->getCurrentType()->calculateBuyableDiscountAmount($buyable, $quantity);
     }
 
     public function getPayload()
