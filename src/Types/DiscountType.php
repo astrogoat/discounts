@@ -23,7 +23,7 @@ abstract class DiscountType extends Component implements CartDiscountType
         return Str::of(class_basename($this))->beforeLast('Type')->headline();
     }
 
-    public function canBeApplied(CartItem|Buyable $item) : ?bool
+    public function canBeApplied(CartItem|Buyable $item): ?bool
     {
         $discounts = app(Discounts::class);
 

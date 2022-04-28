@@ -41,7 +41,7 @@ class TieredPercentageType extends DiscountType
         return "{$percentage}%";
     }
 
-    public function getTitleBasedOnAmount(Money $amount) : string
+    public function getTitleBasedOnAmount(Money $amount): string
     {
         // @TODO
         return '';
@@ -76,7 +76,9 @@ class TieredPercentageType extends DiscountType
         // 3. Discount is available = diff between currently applied discount and new tier.
         $currentTierDiscount = $this->findMatchingTier(cart()->getSubtotal());
         $diffBetweenCurrentAndNewTierInPercentage = $newTierDiscount['value'] - $currentTierDiscount['value'];
+
         return new Money($diffBetweenCurrentAndNewTierInPercentage / 100 * $buyable->getBuyablePrice()->getAmount(), cart()->getCartCurrency());
+
         return $buyable->getBuyablePrice()->subtract($discountedAmount);
         ray($currentTierDiscount, $newTierDiscount, $diffBetweenCurrentAndNewTierInPercentage);
 

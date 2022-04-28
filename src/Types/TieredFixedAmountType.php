@@ -15,7 +15,7 @@ class TieredFixedAmountType extends DiscountType
 {
     use HasTiers;
 
-    const DEFAULT_BUYABLE_DISCOUNT_CALCULATION_RULE = 'itemsInCart';
+    public const DEFAULT_BUYABLE_DISCOUNT_CALCULATION_RULE = 'itemsInCart';
 
     public $displayTiers;
     public $buyableDiscountCalculationRule;
@@ -36,7 +36,7 @@ class TieredFixedAmountType extends DiscountType
         return $this->getTitleBasedOnAmount($qualifyingItemsSubtotal);
     }
 
-    public function getTitleBasedOnAmount(Money $amount) : string
+    public function getTitleBasedOnAmount(Money $amount): string
     {
         $amount = match ($this->getBuyableDiscountCalculationRule()) {
             'itemsInCart' => $this->calculateDiscountAmountBasedOnItemsInCart($amount),
@@ -173,12 +173,14 @@ class TieredFixedAmountType extends DiscountType
         // 1. New total price does not qualilfy for discount = $0
         if ($newTierDiscount['value'] == 0) {
             ray(1);
+
             return new Money(0, cart()->getCartCurrency());
         }
 
         // 2. Max discount has already been applied = $0
         if ($this->maxDiscountHasAlreadyBeenAppliedInCart()) {
             ray(2);
+
             return new Money(0, cart()->getCartCurrency());
         }
 
@@ -201,15 +203,17 @@ class TieredFixedAmountType extends DiscountType
         return $diffBetweenCurrentAndNewTier;
     }
 
-    private function calculateDiscountAmountBasedOnCurrentTier(Money $amount) {
+    private function calculateDiscountAmountBasedOnCurrentTier(Money $amount)
+    {
         return new Money($this->findMatchingTier($amount)['value'], $amount->getCurrency());
     }
 
-    private function calculateDiscountAmountBasedOnHighestTier(Money $amount) {
+    private function calculateDiscountAmountBasedOnHighestTier(Money $amount)
+    {
         return new Money($this->getHighestValueTier()['value'], $amount->getCurrency());
     }
 
-    private function getBuyableDiscountCalculationRule() : string
+    private function getBuyableDiscountCalculationRule(): string
     {
         return $this->buyableDiscountCalculationRule
             ?: settings(DiscountsSettings::class, 'payload.value.buyableDiscountCalculationRule');
