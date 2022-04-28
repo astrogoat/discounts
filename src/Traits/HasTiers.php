@@ -7,7 +7,26 @@ use Money\Money;
 
 trait HasTiers
 {
-    private function findMatchingTier(Money $money)
+    private function getHighestValueTier() : array
+    {
+        $highestTier = collect(settings(DiscountsSettings::class, 'payload.value'))
+            ->sortByDesc
+            ->value
+            ->values()
+            ->first();
+
+        return $highestTier ?: [
+            'value' => 0,
+            'threshold' => 0,
+        ];
+    }
+
+    private function maxDiscountHasAlreadyBeenAppliedInCart() : bool
+    {
+        return $this->getHighestValueTier()['value'] == cart()->getDiscountAmount()->getAmount();
+    }
+
+    private function findMatchingTier(Money $money) : array
     {
         $tiers = collect(settings(DiscountsSettings::class, 'payload.value'))
             ->sortByDesc
