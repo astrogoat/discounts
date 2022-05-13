@@ -8,6 +8,7 @@ use Astrogoat\Cart\Contracts\DiscountType as CartDiscountType;
 use Astrogoat\Discounts\Discounts;
 use Illuminate\Support\Str;
 use Livewire\Component;
+use Money\Money;
 
 abstract class DiscountType extends Component implements CartDiscountType
 {
@@ -23,16 +24,22 @@ abstract class DiscountType extends Component implements CartDiscountType
         return Str::of(class_basename($this))->beforeLast('Type')->headline();
     }
 
-    public function canBeApplied(CartItem|Buyable $item): ?bool
+    public function customCanBeApplied(CartItem|Buyable $item): bool
     {
-        $discounts = app(Discounts::class);
-
-        $callback = $discounts->getCanBeAppliedConstraint(static::class);
-
-        if ($callback) {
-            return call_user_func($callback, $item);
+        if (! $this->hasCustomCanBeAppliedConstaint()) {
+            return true;
         }
 
-        return null;
+        return call_user_func(app(Discounts::class)->getCanBeAppliedConstraint(static::class), $item);
+    }
+
+    public function hasCustomCanBeAppliedConstaint(): bool
+    {
+        return is_callable(app(Discounts::class)->getCanBeAppliedConstraint(static::class));
+    }
+
+    public function formatMoney(Money $money): string
+    {
+        return call_user_func(app(Discounts::class)->getMoneyFormatter(), $money);
     }
 }

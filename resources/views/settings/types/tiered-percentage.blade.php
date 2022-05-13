@@ -33,4 +33,8 @@
     >
         Add Tier
     </x-fab::elements.button>
+
+    @include('discounts::settings.includes.buyable-discount-calculation-rule-selection')
+
+    @include('discounts::settings.includes.title-display-type-selection')
 </div>
