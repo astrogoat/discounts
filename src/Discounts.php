@@ -7,10 +7,13 @@ use Astrogoat\Discounts\Types\DiscountType;
 use Astrogoat\Discounts\Types\TieredFixedAmountType;
 use Astrogoat\Discounts\Types\TieredPercentageType;
 use Closure;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 use Money\Currencies\ISOCurrencies;
 use Money\Formatter\IntlMoneyFormatter;
 use Money\Money;
+use Spatie\LaravelSettings\Exceptions\MissingSettings;
 use Stancl\Tenancy\Events\TenancyBootstrapped;
 
 class Discounts
@@ -63,7 +66,13 @@ class Discounts
     public static function canBeApplied(Closure $callback, string $type = null): void
     {
         Event::listen(TenancyBootstrapped::class, function (TenancyBootstrapped $event) use ($callback, $type) {
-            app(Discounts::class)->canBeApplied[$type ?? app(Discounts::class)->getCurrentType()::class] = $callback;
+            try {
+                app(Discounts::class)->canBeApplied[$type ?? app(Discounts::class)->getCurrentType()::class] = $callback;
+            } catch (MissingSettings|QueryException $exception) {
+                Log::error($exception->getMessage(), [
+                    'class' => __CLASS__,
+                ]);
+            }
         });
     }
 
@@ -75,7 +84,13 @@ class Discounts
     public static function moneyFormatter(Closure $callback): void
     {
         Event::listen(TenancyBootstrapped::class, function (TenancyBootstrapped $event) use ($callback) {
-            app(Discounts::class)->moneyFormatter = $callback;
+            try {
+                app(Discounts::class)->moneyFormatter = $callback;
+            } catch (MissingSettings|QueryException $exception) {
+                Log::error($exception->getMessage(), [
+                    'class' => __CLASS__,
+                ]);
+            }
         });
     }
 
