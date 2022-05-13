@@ -12,6 +12,7 @@ class MaxDiscountHasAlreadyBeenAppliedInCart extends Scenario
     {
         if ($discountType->maxDiscountAmountHasAlreadyBeenAppliedInCart($amount)) {
             ray('TOTAL max discount has already been applied');
+
             return new Money(0, cart()->getCartCurrency());
         }
 

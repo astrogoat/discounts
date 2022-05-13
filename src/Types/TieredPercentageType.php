@@ -194,7 +194,7 @@ class TieredPercentageType extends DiscountType implements CanCalculateBuyableDi
         return $this->getHighestValueTier()['value'];
     }
 
-    public function calculateDiscountAmountBasedOnTier(array $tier, Money $amount) : Money
+    public function calculateDiscountAmountBasedOnTier(array $tier, Money $amount): Money
     {
         return new Money($tier['value'] / 100 * $amount->getAmount(), $amount->getCurrency());
     }
@@ -206,7 +206,7 @@ class TieredPercentageType extends DiscountType implements CanCalculateBuyableDi
         return cart()->getDiscountAmount()->greaterThanOrEqual($discountAmount);
     }
 
-    public function maxDiscountAmountForTierHasAlreadyBeenApplied(Money $amount) : bool
+    public function maxDiscountAmountForTierHasAlreadyBeenApplied(Money $amount): bool
     {
         $newTier = $this->getNewTier($amount);
         $currentTier = $this->getCurrentTier($amount);
@@ -220,7 +220,7 @@ class TieredPercentageType extends DiscountType implements CanCalculateBuyableDi
         return cart()->getDiscountAmount()->greaterThanOrEqual($discountAmount);
     }
 
-    public function calculateDifferenceBetweenCurrentAndNewTier(Money $amount) : Money
+    public function calculateDifferenceBetweenCurrentAndNewTier(Money $amount): Money
     {
         $currentTier = $this->getCurrentTier($amount);
         $newTier = $this->getNewTier($amount);

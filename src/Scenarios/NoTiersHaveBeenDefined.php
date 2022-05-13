@@ -12,6 +12,7 @@ class NoTiersHaveBeenDefined extends Scenario
     {
         if ($discountType->countTiers() === 0) {
             ray('// No tiers have been defined');
+
             return new Money(0, $amount->getCurrency());
         }
 

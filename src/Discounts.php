@@ -2,7 +2,6 @@
 
 namespace Astrogoat\Discounts;
 
-use Astrogoat\Cart\Contracts\Buyable;
 use Astrogoat\Discounts\Settings\DiscountsSettings;
 use Astrogoat\Discounts\Types\DiscountType;
 use Astrogoat\Discounts\Types\TieredFixedAmountType;

@@ -176,7 +176,7 @@ class TieredFixedAmountType extends DiscountType implements CanCalculateBuyableD
         return new Money($tier['value'], $amount->getCurrency());
     }
 
-    public function calculateDifferenceBetweenCurrentAndNewTier(Money $amount) : Money
+    public function calculateDifferenceBetweenCurrentAndNewTier(Money $amount): Money
     {
         return new Money($this->getNewTier($amount)['value'] - $this->getCurrentTier($amount)['value'], cart()->getCartCurrency());
     }
@@ -186,7 +186,7 @@ class TieredFixedAmountType extends DiscountType implements CanCalculateBuyableD
         return $this->getHighestValueTier()['value'] == cart()->getDiscountAmount()->getAmount();
     }
 
-    public function maxDiscountAmountForTierHasAlreadyBeenApplied(Money $amount) : bool
+    public function maxDiscountAmountForTierHasAlreadyBeenApplied(Money $amount): bool
     {
         $newTier = $this->getNewTier($amount);
         $currentTier = $this->getCurrentTier($amount);
