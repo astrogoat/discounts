@@ -22,7 +22,7 @@ class TieredFixedAmountType extends DiscountType implements CanCalculateBuyableD
         return 'tiered_fixed_amount';
     }
 
-    public function getTitle(): string
+    public function getTitle(string $type = 'default'): string
     {
         $qualifyingItemsSubtotal = cart()->getQualifyingItemsForDiscount($this)->reduce(function (Money $carry, CartItem $cartItem) {
             return $carry->add($cartItem->getSubtotal());
@@ -33,7 +33,7 @@ class TieredFixedAmountType extends DiscountType implements CanCalculateBuyableD
         return $this->getTitleBasedOnAmount($qualifyingItemsSubtotal);
     }
 
-    public function getTitleBasedOnAmount(Money $amount): string
+    public function getTitleBasedOnAmount(Money $amount, string $type = 'default'): string
     {
         $amount = match ($this->getBuyableDiscountCalculationRule()) {
             'itemsInCart' => $this->calculateDiscountAmountBasedOnItemsInCart($amount),

@@ -40,7 +40,7 @@ class TieredPercentageType extends DiscountType implements CanCalculateBuyableDi
         return 'tiered_percentage';
     }
 
-    public function getTitle(): string
+    public function getTitle(string $type = 'default'): string
     {
         $qualifyingItemsSubtotal = cart()->getQualifyingItemsForDiscount($this)->subtotal();
 
@@ -49,7 +49,7 @@ class TieredPercentageType extends DiscountType implements CanCalculateBuyableDi
         return $this->getTitleBasedOnAmount($qualifyingItemsSubtotal);
     }
 
-    public function getTitleBasedOnAmount(Money $amount): string
+    public function getTitleBasedOnAmount(Money $amount, string $type = 'default'): string
     {
         if ($this->getTitleDisplayType() == 'amount') {
             $amount = match ($this->getBuyableDiscountCalculationRule()) {
