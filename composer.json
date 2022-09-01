@@ -24,7 +24,7 @@
     "require": {
         "php": "^8.0",
         "astrogoat/cart": "^2.0",
-        "astrogoat/strata": "^0.1.0",
+        "astrogoat/strata": "^0.2.0",
         "illuminate/contracts": "^8.37 || ^9.0",
         "spatie/laravel-package-tools": "^1.4.3"
     },
