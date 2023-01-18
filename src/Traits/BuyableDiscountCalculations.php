@@ -38,7 +38,8 @@ trait BuyableDiscountCalculations
     // Below , I created a bad function that will extract the value from the settings but it does so poorly.
     // the red flag here is that there is no way for it to understand pricing tiers so it just seeks the first value.
     // HELP
-    public function getSettingsInputValue() {
+    public function getSettingsInputValue()
+    {
         return settings(DiscountsSettings::class, 'payload.value.tiers.0.value');
     }
 
