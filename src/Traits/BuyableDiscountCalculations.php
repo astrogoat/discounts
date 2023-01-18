@@ -33,6 +33,15 @@ trait BuyableDiscountCalculations
         return $rule ?: self::$defaultBuyableDiscountCalculationRule;
     }
 
+    // I want to create a function that outputs the percent discount that the user would have entered
+    // in the discounts setting field. the input gets nested in a payload because it's expecting a tier of discounts per dollar amount.
+    // Below , I created a bad function that will extract the value from the settings but it does so poorly.
+    // the red flag here is that there is no way for it to understand pricing tiers so it just seeks the first value.
+    // HELP
+    public function getSettingsInputValue() {
+        return settings(DiscountsSettings::class, 'payload.value.tiers.0.value');
+    }
+
     public function updatingBuyableDiscountCalculationRule($value): void
     {
         data_set($this->payload['value'], 'buyableDiscountCalculationRule', $value);
