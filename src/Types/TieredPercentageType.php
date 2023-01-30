@@ -51,7 +51,9 @@ class TieredPercentageType extends DiscountType implements CanCalculateBuyableDi
 
     public function getTitleBasedOnAmount(Money $amount, string $type = 'default'): string
     {
-        if ($this->getTitleDisplayType() == 'amount') {
+        $this->setTitleDisplayType();
+
+        if ($type !== 'percentage' && ($this->getTitleDisplayType() == 'amount' || $type == 'amount')) {
             $amount = match ($this->getBuyableDiscountCalculationRule()) {
                 'itemsInCart' => $this->calculateDiscountAmountBasedOnItemsInCart($amount),
                 'currentTier' => $this->calculateDiscountAmountBasedOnCurrentTier($amount),
