@@ -11,8 +11,6 @@ class NewSubtotalDoesNotQualifyForDiscount extends Scenario
     public function calculate(CanCalculateBuyableDiscounts $discountType, Money $amount, Closure $next)
     {
         if ($discountType->newSubtotalDoesNotQualifyForDiscount($amount)) {
-            ray('New total price does not qualilfy for discount.');
-
             return new Money(0, $amount->getCurrency());
         }
 

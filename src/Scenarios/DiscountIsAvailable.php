@@ -10,8 +10,6 @@ class DiscountIsAvailable extends Scenario
 {
     public function calculate(CanCalculateBuyableDiscounts $discountType, Money $amount, Closure $next)
     {
-        ray('Discount is available');
-
         return $discountType->calculateDifferenceBetweenCurrentAndNewTier($amount);
     }
 }
