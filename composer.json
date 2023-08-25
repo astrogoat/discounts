@@ -25,16 +25,16 @@
         "php": "^8.0",
         "astrogoat/cart": "^2.0",
         "astrogoat/strata": "^0.3.0|^0.4.0",
-        "illuminate/contracts": "^8.37 || ^9.0",
+        "illuminate/contracts": "^8.37 || ^9.0|^10.0",
         "spatie/laravel-package-tools": "^1.4.3"
     },
     "require-dev": {
-        "nunomaduro/collision": "^5.3",
-        "orchestra/testbench": "^6.15",
-        "pestphp/pest": "^1.18",
-        "pestphp/pest-plugin-laravel": "^1.1",
+        "nunomaduro/collision": "^5.3|^7.0",
+        "orchestra/testbench": "^6.15|^8.5",
+        "pestphp/pest": "^1.18|^2.16",
+        "pestphp/pest-plugin-laravel": "^1.1|^2.2",
         "spatie/laravel-ray": "^1.23",
-        "vimeo/psalm": "^4.8"
+        "vimeo/psalm": "^4.8|^5.15"
     },
     "autoload": {
         "psr-4": {
