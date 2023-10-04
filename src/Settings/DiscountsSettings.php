@@ -3,7 +3,9 @@
 namespace Astrogoat\Discounts\Settings;
 
 use Astrogoat\Discounts\Casts\Payload;
+use Astrogoat\Discounts\Events\DiscountSettingsSaved;
 use Helix\Lego\Settings\AppSettings;
+use Spatie\LaravelSettings\Settings;
 
 class DiscountsSettings extends AppSettings
 {
@@ -32,5 +34,14 @@ class DiscountsSettings extends AppSettings
     public function description(): string
     {
         return 'Allows you to set discounts and discount tiers.';
+    }
+
+    public function save(): Settings
+    {
+        $parent = parent::save();
+
+        event(new DiscountSettingsSaved($this));
+
+        return $parent;
     }
 }
