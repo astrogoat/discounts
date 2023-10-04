@@ -11,8 +11,6 @@ class OnlyOneTierHasBeenDefined extends Scenario
     public function calculate(CanCalculateBuyableDiscounts $discountType, Money $amount, Closure $next)
     {
         if ($discountType->countTiers() === 1) {
-            ray('// Only one tier has been defined.');
-
             $tier = $discountType->getNewTier($amount);
 
             return $discountType->calculateDiscountAmountBasedOnTier($tier, $amount);

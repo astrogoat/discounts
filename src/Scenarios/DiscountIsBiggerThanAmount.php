@@ -11,7 +11,6 @@ class DiscountIsBiggerThanAmount extends Scenario
     public function calculate(CanCalculateBuyableDiscounts $discountType, Money $amount, Closure $next)
     {
         if ($amount->lessThan($discountType->calculateDifferenceBetweenCurrentAndNewTier($amount))) {
-            ray('Discount is bigger than amount');
             $newTierDiscount = $discountType->getNewTier($amount);
 
             $newTierThresholdAmount = new Money($newTierDiscount['threshold'], $amount->getCurrency());
