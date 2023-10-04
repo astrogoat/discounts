@@ -46,7 +46,7 @@ class TieredPercentageType extends DiscountType implements CanCalculateBuyableDi
 
         $this->buyableDiscountCalculationRule = 'currentTier';
 
-        return $this->getTitleBasedOnAmount($qualifyingItemsSubtotal);
+        return $this->getTitleBasedOnAmount($qualifyingItemsSubtotal, $type);
     }
 
     public function getTitleBasedOnAmount(Money $amount, string $type = 'default'): string
