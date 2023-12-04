@@ -53,7 +53,7 @@ class Discounts
 
     public function getCurrentType(): DiscountType
     {
-        $type = settings(DiscountsSettings::class, 'payload')['type'] ?? $this->getDefaultType();
+        $type = settings(DiscountsSettings::class, 'payload.type') ?? $this->getDefaultType();
 
         return $this->getType($type);
     }
