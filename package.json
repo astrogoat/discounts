@@ -6,7 +6,10 @@
     "test": "tests"
   },
   "scripts": {
-    "release": "npm version minor --tag-version-prefix= && git push origin && git push origin $(git tag --sort=creatordate | tail -n 1)",
+    "release": "gh workflow run release.yml",
+    "release:patch": "gh workflow run release.yml --field level=patch",
+    "release:minor": "gh workflow run release.yml --field level=minor",
+    "release:major": "gh workflow run release.yml --field level=major",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
