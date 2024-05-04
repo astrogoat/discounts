@@ -58,8 +58,8 @@ trait BuyableDiscountCalculations
     {
         return match ($this->buyableDiscountCalculationRule) {
             'itemsInCart' => 'The discount is calculated based on the items already added to the cart and the item about to be added. If by adding the item to the cart, it will bring the discount into a new tier, the difference between the current tier and the next will be calculated. This will tell the customer exactly what the item will cost if added.',
-            'currentTier' => 'The discount is calculated soleley on the price of the item about to be added and the tier that it falls under.',
-            'highestTier' => 'The discount is calculated soleley on the price of the item about to be added and the highest tier available. This will always show the max discount possible, eventhough the cart subtotal might not be applicable for it. Use with care.',
+            'currentTier' => 'The discount is calculated solely on the price of the item about to be added and the tier that it falls under.',
+            'highestTier' => 'The discount is calculated solely on the price of the item about to be added and the highest tier available. This will always show the max discount possible, even though the cart subtotal might not be applicable for it. Use with care.',
             default => '',
         };
     }

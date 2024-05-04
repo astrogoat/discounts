@@ -26,14 +26,14 @@ abstract class DiscountType extends Component implements CartDiscountType
 
     public function customCanBeApplied(CartItem|Buyable $item): bool
     {
-        if (! $this->hasCustomCanBeAppliedConstaint()) {
-            return true;
+        if (! $this->hasCustomCanBeAppliedConstraint()) {
+            return null;
         }
 
         return call_user_func(app(Discounts::class)->getCanBeAppliedConstraint(static::class), $item);
     }
 
-    public function hasCustomCanBeAppliedConstaint(): bool
+    public function hasCustomCanBeAppliedConstraint(): bool
     {
         return is_callable(app(Discounts::class)->getCanBeAppliedConstraint(static::class));
     }
