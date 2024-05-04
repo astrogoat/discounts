@@ -95,6 +95,14 @@ class TieredPercentageType extends DiscountType implements CanCalculateBuyableDi
 
     public function canBeAppliedTo(CartItem|Buyable $item): bool
     {
+        if ($this->hasCustomCanBeAppliedConstraint()) {
+            $value = $this->customCanBeApplied($item);
+
+            if (is_bool($value)) {
+                return $value;
+            }
+        }
+
         if ($item instanceof CartItem) {
             return ! $item->getSubtotal()->isZero();
         }

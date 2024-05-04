@@ -95,8 +95,12 @@ class TieredFixedAmountType extends DiscountType implements CanCalculateBuyableD
 
     public function canBeAppliedTo(CartItem|Buyable $item): bool
     {
-        if ($this->hasCustomCanBeAppliedConstaint()) {
-            return $this->customCanBeApplied($item);
+        if ($this->hasCustomCanBeAppliedConstraint()) {
+            $value = $this->customCanBeApplied($item);
+
+            if (is_bool($value)) {
+                return $value;
+            }
         }
 
         if ($item instanceof CartItem) {
