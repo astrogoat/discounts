@@ -12,7 +12,7 @@ class AutoApplyDiscount
     /**
      * Handle the event.
      *
-     * @param \Astrogoat\Cart\Events\ItemAddedToCart $event
+     * @param ItemAddedToCart|ItemRemovedFromCart $event
      *
      * @return void
      */
@@ -29,19 +29,7 @@ class AutoApplyDiscount
                 return;
             }
 
-            if (cart()->getTotalDiscountAmountFor(app(Discounts::class)->getCurrentType())->isZero()) {
-                return;
-            }
-
             cart()->addDiscount(app(Discounts::class)->getCurrentType());
-        }
-
-        if ($event instanceof ItemRemovedFromCart) {
-            $discount = app(Discounts::class)->getCurrentType();
-
-            if (cart()->getTotalDiscountAmountFor($discount)->isZero()) {
-                cart()->removeDiscount($discount->getId());
-            }
         }
     }
 }
