@@ -25,10 +25,6 @@ class AutoApplyDiscount
         }
 
         if ($event instanceof ItemAddedToCart) {
-            if (app(DiscountsSettings::class)->auto_apply_discount !== true) {
-                return;
-            }
-
             cart()->addDiscount(app(Discounts::class)->getCurrentType());
         }
     }
