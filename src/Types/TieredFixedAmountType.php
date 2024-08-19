@@ -26,7 +26,7 @@ class TieredFixedAmountType extends DiscountType implements CanCalculateBuyableD
     {
         $qualifyingItemsSubtotal = cart()->getQualifyingItemsForDiscount($this)->reduce(function (Money $carry, CartItem $cartItem) {
             return $carry->add($cartItem->getSubtotal());
-        }, new Money(0, cart()->getCartCurrency()));
+        }, new Money(0, cart()->getCurrency()));
 
         $this->buyableDiscountCalculationRule = 'currentTier';
 
@@ -57,14 +57,14 @@ class TieredFixedAmountType extends DiscountType implements CanCalculateBuyableD
         $amount = $qualifyingCartItems
             ->reduce(function (Money $carry, CartItem $cartItem) {
                 return $carry->add($cartItem->getSubtotal());
-            }, new Money(0, cart()->getCartCurrency()));
+            }, new Money(0, cart()->getCurrency()));
 
         $discountAmount = $this->findMatchingTier($amount)['value'];
 
         $totalQualifyingCartQuantity = $qualifyingCartItems->sum(fn (CartItem $collectionCartItem) => $collectionCartItem->getQuantity());
         $discountedAmount = $discountAmount / $totalQualifyingCartQuantity * $cartItem->getQuantity();
 
-        return new Money($discountedAmount, cart()->getCartCurrency());
+        return new Money($discountedAmount, cart()->getCurrency());
     }
 
     /**
@@ -147,12 +147,12 @@ class TieredFixedAmountType extends DiscountType implements CanCalculateBuyableD
     //     //
     //     // // New total price does not qualilfy for discount.
     //     // if ($newTierDiscount['value'] == 0) {
-    //     //     return new Money(0, cart()->getCartCurrency());
+    //     //     return new Money(0, cart()->getCurrency());
     //     // }
     //
     //     // // Max discount has already been applied = $0
     //     // if ($this->maxDiscountHasAlreadyBeenAppliedInCart()) {
-    //     //     return new Money(0, cart()->getCartCurrency());
+    //     //     return new Money(0, cart()->getCurrency());
     //     // }
     //
     //     // Only one tier has been defined.
@@ -162,11 +162,11 @@ class TieredFixedAmountType extends DiscountType implements CanCalculateBuyableD
     //     // }
     //
     //     // $currentTierDiscount = $this->getCurrentTier($amount);
-    //     // $diffBetweenCurrentAndNewTier = new Money($newTierDiscount['value'] - $currentTierDiscount['value'], cart()->getCartCurrency());
+    //     // $diffBetweenCurrentAndNewTier = new Money($newTierDiscount['value'] - $currentTierDiscount['value'], cart()->getCurrency());
     //     //
     //     // // 4. Discount is bigger than buyable price.
     //     // if ($amount->lessThan($diffBetweenCurrentAndNewTier)) {
-    //     //     $newTierThresholdAmount = new Money($newTierDiscount['threshold'], cart()->getCartCurrency());
+    //     //     $newTierThresholdAmount = new Money($newTierDiscount['threshold'], cart()->getCurrency());
     //     //
     //     //     return $newTierThresholdAmount->subtract(cart()->getSubtotal());
     //     // }
@@ -182,7 +182,7 @@ class TieredFixedAmountType extends DiscountType implements CanCalculateBuyableD
 
     public function calculateDifferenceBetweenCurrentAndNewTier(Money $amount): Money
     {
-        return new Money($this->getNewTier($amount)['value'] - $this->getCurrentTier($amount)['value'], cart()->getCartCurrency());
+        return new Money($this->getNewTier($amount)['value'] - $this->getCurrentTier($amount)['value'], cart()->getCurrency());
     }
 
     public function maxDiscountAmountHasAlreadyBeenAppliedInCart(Money $amount): bool

@@ -11,7 +11,7 @@ class MaxDiscountHasAlreadyBeenAppliedInCart extends Scenario
     public function calculate(CanCalculateBuyableDiscounts $discountType, Money $amount, Closure $next)
     {
         if ($discountType->maxDiscountAmountHasAlreadyBeenAppliedInCart($amount)) {
-            return new Money(0, cart()->getCartCurrency());
+            return new Money(0, cart()->getCurrency());
         }
 
         return $next([

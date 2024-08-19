@@ -67,7 +67,7 @@ trait BuyableDiscountCalculations
     public function calculateBuyableDiscountAmount(Buyable $buyable, int $quantity = 1): Money
     {
         if (! $this->canBeAppliedTo($buyable)) {
-            return new Money(0, cart()->getCartCurrency());
+            return new Money(0, cart()->getCurrency());
         }
 
         return match ($this->getBuyableDiscountCalculationRule()) {
