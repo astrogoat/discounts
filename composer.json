@@ -22,8 +22,8 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "astrogoat/cart": "dev-feature/dtce-1961-headless-shopify-cart as 2.15",
+        "php": "^8.3",
+        "astrogoat/cart": "^3.0",
         "astrogoat/strata": "^0.7.0",
         "illuminate/contracts": "^8.37 || ^9.0|^10.0",
         "spatie/laravel-package-tools": "^1.4.3"
