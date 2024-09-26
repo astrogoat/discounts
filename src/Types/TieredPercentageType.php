@@ -81,7 +81,7 @@ class TieredPercentageType extends DiscountType implements CanCalculateBuyableDi
 
         $percentage = $this->findMatchingTier(cart()->getSubtotal())['value'];
 
-        return $cartItem->getSubtotal()->divide(100)->multiply($percentage);
+        return new Money($cartItem->getSubtotal()->getAmount() / 100 * $percentage, $cartItem->price->getCurrency());
     }
 
     public function updatingDisplayTiers($value, $property)
