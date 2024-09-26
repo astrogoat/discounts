@@ -206,7 +206,7 @@ class TieredPercentageType extends DiscountType implements CanCalculateBuyableDi
 
     public function calculateDiscountAmountBasedOnTier(array $tier, Money $amount): Money
     {
-        return new Money((int) number_format($tier['value'] / 100 * $amount->getAmount(), 0, '.', ''), $amount->getCurrency());
+        return new Money($tier['value'] / 100 * $amount->getAmount(), $amount->getCurrency());
     }
 
     public function maxDiscountAmountHasAlreadyBeenAppliedInCart(Money $amount): bool
