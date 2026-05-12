@@ -33,7 +33,7 @@ class TieredFixedAmountType extends DiscountType implements CanCalculateBuyableD
         return $this->getTitleBasedOnAmount($qualifyingItemsSubtotal, $type);
     }
 
-    public function getTitleBasedOnAmount(Money $amount, string $type = 'default'): string
+    public function getTitleBasedOnAmount(Money $amount, string $type = 'default', CartItem|Buyable|null $tierEligibilityContext = null): string
     {
         $amount = match ($this->getBuyableDiscountCalculationRule()) {
             'itemsInCart' => $this->calculateDiscountAmountBasedOnItemsInCart($amount),
