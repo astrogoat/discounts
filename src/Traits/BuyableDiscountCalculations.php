@@ -66,15 +66,22 @@ trait BuyableDiscountCalculations
 
     public function calculateBuyableDiscountAmount(Buyable $buyable, int $quantity = 1): Money
     {
-        if (! $this->canBeAppliedTo($buyable)) {
-            return new Money(0, cart()->getCurrency());
-        }
+        $previousContext = $this->tierEligibilityContext ?? null;
+        $this->tierEligibilityContext = $buyable;
 
-        return match ($this->getBuyableDiscountCalculationRule()) {
-            'itemsInCart' => $this->calculateDiscountAmountBasedOnItemsInCart($buyable->getBuyablePrice()),
-            'currentTier' => $this->calculateDiscountAmountBasedOnCurrentTier($buyable->getBuyablePrice()),
-            'highestTier' => $this->calculateDiscountAmountBasedOnHighestTier($buyable->getBuyablePrice()),
-        };
+        try {
+            if (! $this->canBeAppliedTo($buyable)) {
+                return new Money(0, cart()->getCurrency());
+            }
+
+            return match ($this->getBuyableDiscountCalculationRule()) {
+                'itemsInCart' => $this->calculateDiscountAmountBasedOnItemsInCart($buyable->getBuyablePrice()),
+                'currentTier' => $this->calculateDiscountAmountBasedOnCurrentTier($buyable->getBuyablePrice()),
+                'highestTier' => $this->calculateDiscountAmountBasedOnHighestTier($buyable->getBuyablePrice()),
+            };
+        } finally {
+            $this->tierEligibilityContext = $previousContext;
+        }
     }
 
     private function calculateDiscountAmountBasedOnCurrentTier(Money $amount): Money

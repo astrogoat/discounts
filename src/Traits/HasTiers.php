@@ -2,6 +2,8 @@
 
 namespace Astrogoat\Discounts\Traits;
 
+use Astrogoat\Cart\CartItem;
+use Astrogoat\Cart\Contracts\Buyable;
 use Astrogoat\Discounts\Settings\DiscountsSettings;
 use Money\Money;
 
@@ -21,15 +23,21 @@ trait HasTiers
         ];
     }
 
-    private function findMatchingTier(Money $money): array
+    private function findMatchingTier(Money $money, CartItem|Buyable|null $contextOverride = null): array
     {
         $tiers = collect(settings(DiscountsSettings::class, 'payload.value.tiers'))
             ->sortByDesc
             ->threshold
             ->values();
 
+        $context = $contextOverride ?? $this->tierEligibilityContext ?? null;
+
         foreach ($tiers as $tier) {
             if ($money->getAmount() >= $tier['threshold']) {
+                if (! $this->tierQualifiesForContext($tier, $money, $context)) {
+                    continue;
+                }
+
                 return $tier;
             }
         }

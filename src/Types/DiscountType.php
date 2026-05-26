@@ -14,6 +14,12 @@ abstract class DiscountType extends Component implements CartDiscountType
 {
     public $payload;
 
+    /**
+     * When set (e.g. during buyable discount calculation), tier resolution may use this
+     * to skip tiers whose discount does not apply to the given cart line or buyable.
+     */
+    protected CartItem|Buyable|null $tierEligibilityContext = null;
+
     public function updatedPayload()
     {
         $this->emitTo('astrogoat.discounts.casts.payload', 'payloadHasBeenUpdated', $this->payload);
@@ -41,5 +47,13 @@ abstract class DiscountType extends Component implements CartDiscountType
     public function formatMoney(Money $money): string
     {
         return call_user_func(app(Discounts::class)->getMoneyFormatter(), $money);
+    }
+
+    /**
+     * @param  array{threshold: int, value: mixed}  $tier
+     */
+    protected function tierQualifiesForContext(array $tier, Money $money, CartItem|Buyable|null $context = null): bool
+    {
+        return true;
     }
 }
